@@ -1,0 +1,7 @@
+# recursos generados con `npm run app:sync` a partir de ../dist y build/out
+vendor/
+
+# bundles y dependencias de construcción
+build/node_modules/
+build/out/
+build/generated/

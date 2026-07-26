@@ -1,0 +1,26 @@
+{
+  "name": "bpmn-app-build",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Construye el bundle del panel de propiedades para la app autoalojada",
+  "type": "module",
+  "scripts": {
+    "build": "npm run pack-rules && rollup -c rollup.config.mjs",
+    "pack-rules": "bpmnlint-pack-config -c ../.bpmnlintrc -o generated/bpmnlint-config.js"
+  },
+  "devDependencies": {
+    "@bpmn-io/properties-panel": "^3.26.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^1.0.0",
+    "bpmn-js-bpmnlint": "^0.24.0",
+    "bpmn-js-color-picker": "^0.7.2",
+    "bpmn-js-create-append-anything": "^2.0.0",
+    "bpmn-js-properties-panel": "^5.62.0",
+    "bpmn-js-token-simulation": "^0.40.0",
+    "bpmnlint": "^11.12.1",
+    "bpmnlint-pack-config": "^0.9.0",
+    "rollup": "^4.34.0",
+    "rollup-plugin-css-only": "^4.5.2"
+  }
+}

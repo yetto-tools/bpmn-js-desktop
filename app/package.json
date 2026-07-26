@@ -1,0 +1,7 @@
+{
+  "name": "bpmn-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modelador BPMN autoalojado, en español",
+  "type": "module"
+}

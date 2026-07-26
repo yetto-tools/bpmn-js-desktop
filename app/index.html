@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelador BPMN</title>
+
+  <link rel="stylesheet" href="vendor/assets/diagram-js.css">
+  <link rel="stylesheet" href="vendor/assets/bpmn-js.css">
+  <link rel="stylesheet" href="vendor/assets/bpmn-font/css/bpmn-embedded.css">
+  <link rel="stylesheet" href="vendor/properties-panel.css">
+  <link rel="stylesheet" href="vendor/bpmn-js-bpmnlint.css">
+  <link rel="stylesheet" href="vendor/bpmn-js-token-simulation.css">
+  <link rel="stylesheet" href="vendor/color-picker.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="app-title">Modelador BPMN</h1>
+
+    <div class="app-toolbar" role="toolbar" aria-label="Herramientas del diagrama">
+      <div class="app-toolbar-group">
+        <button type="button" data-action="new" title="Nuevo diagrama">Nuevo</button>
+        <button type="button" data-action="open" title="Abrir un archivo .bpmn (Ctrl+O)">Abrir…</button>
+        <button type="button" data-action="download-bpmn" title="Descargar el diagrama como archivo .bpmn (Ctrl+S)">Guardar</button>
+      </div>
+
+      <div class="app-toolbar-group">
+        <button type="button" data-action="download-svg" title="Descargar el diagrama como imagen SVG">SVG</button>
+        <button type="button" data-action="download-png" title="Descargar el diagrama como imagen PNG">PNG</button>
+      </div>
+
+      <div class="app-toolbar-group">
+        <button type="button" data-action="undo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer">↶</button>
+        <button type="button" data-action="redo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer">↷</button>
+      </div>
+
+      <div class="app-toolbar-group">
+        <button type="button" data-action="zoom-out" title="Alejar" aria-label="Alejar">−</button>
+        <button type="button" data-action="zoom-fit" title="Ajustar al lienzo" aria-label="Ajustar al lienzo">⤢</button>
+        <button type="button" data-action="zoom-in" title="Acercar" aria-label="Acercar">+</button>
+      </div>
+
+      <div class="app-toolbar-group">
+        <button type="button" data-action="toggle-simulation" id="toggle-simulation"
+                title="Simular el flujo del proceso paso a paso" aria-pressed="false">Simular</button>
+        <button type="button" data-action="toggle-problems" id="toggle-problems"
+                title="Mostrar u ocultar los problemas detectados en el modelo" aria-pressed="false">
+          Validación <span class="app-badge" id="problems-badge" hidden>0</span>
+        </button>
+        <button type="button" data-action="toggle-properties" id="toggle-properties"
+                title="Mostrar u ocultar el panel de propiedades" aria-pressed="true">Propiedades</button>
+      </div>
+    </div>
+
+    <div class="app-status">
+      <span class="app-file-name" id="file-name">diagrama.bpmn</span>
+      <span class="app-autosave" id="autosave-status" role="status"></span>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="app-editor">
+      <div id="canvas" class="app-canvas">
+
+        <div class="app-actions" role="toolbar" aria-label="Acciones del diagrama">
+          <div class="app-actions-group">
+            <button type="button" data-action="open" title="Abrir un archivo .bpmn (Ctrl+O)" aria-label="Abrir">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h5.6l1.7 2H20a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm0 4v8h16V9H4Z"/></svg>
+            </button>
+            <button type="button" data-action="new" title="Nuevo diagrama" aria-label="Nuevo diagrama">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm-1 3h2v3h3v2h-3v3h-2v-3H8v-2h3V8Z"/></svg>
+            </button>
+          </div>
+
+          <div class="app-actions-group">
+            <button type="button" data-action="download-bpmn" title="Descargar el diagrama (.bpmn) (Ctrl+S)" aria-label="Descargar diagrama">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8.2l3.1-3.1 1.4 1.4L12 15l-5.5-5.5 1.4-1.4L11 11.2V3ZM4 17h16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Z"/></svg>
+            </button>
+            <button type="button" data-action="download-png" title="Descargar como imagen PNG" aria-label="Descargar imagen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v9.6l4.2-4.6 3 3.4 3.4-4.2L19 15.4V6H5Zm3.4 1.6a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Z"/></svg>
+            </button>
+          </div>
+
+          <div class="app-actions-group">
+            <button type="button" data-action="toggle-shortcuts" title="Atajos de teclado (?)" aria-label="Atajos de teclado">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm1 2v8h16V8H4Zm1.5 1.5h2v2h-2v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm-9 3h2v2h-2v-2Zm3 0h6v2h-6v-2Zm7 0h2v2h-2v-2Z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <section id="problems" class="app-problems" aria-label="Problemas del modelo" hidden>
+        <header class="app-problems-header">
+          <h2 class="app-problems-title">Validación del modelo</h2>
+          <span class="app-problems-summary" id="problems-summary"></span>
+          <button type="button" class="app-problems-close" data-action="toggle-problems"
+                  aria-label="Cerrar la lista de problemas">✕</button>
+        </header>
+        <ul class="app-problems-list" id="problems-list"></ul>
+      </section>
+    </div>
+
+    <aside id="properties" class="app-properties" aria-label="Propiedades del elemento"></aside>
+  </main>
+
+  <div class="app-drop-hint" id="drop-hint" hidden>Suelta aquí un archivo .bpmn para abrirlo</div>
+
+  <div class="app-notification" id="notification" role="alert" hidden></div>
+
+  <dialog id="shortcuts" class="app-shortcuts" aria-label="Atajos de teclado">
+    <header class="app-shortcuts-header">
+      <h2>Atajos de teclado</h2>
+      <button type="button" data-action="toggle-shortcuts" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div class="app-shortcuts-columns">
+      <section>
+        <h3>Archivo</h3>
+        <dl>
+          <dt><kbd>Ctrl</kbd> + <kbd>S</kbd></dt><dd>Descargar el diagrama</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>O</kbd></dt><dd>Abrir un archivo</dd>
+        </dl>
+
+        <h3>Edición</h3>
+        <dl>
+          <dt><kbd>Ctrl</kbd> + <kbd>Z</kbd></dt><dd>Deshacer</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>Y</kbd></dt><dd>Rehacer</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>C</kbd></dt><dd>Copiar</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>V</kbd></dt><dd>Pegar</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>A</kbd></dt><dd>Seleccionar todo</dd>
+          <dt><kbd>Supr</kbd></dt><dd>Eliminar la selección</dd>
+          <dt><kbd>F2</kbd></dt><dd>Editar el nombre</dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3>Vista</h3>
+        <dl>
+          <dt><kbd>Ctrl</kbd> + <kbd>+</kbd></dt><dd>Acercar</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>−</kbd></dt><dd>Alejar</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>0</kbd></dt><dd>Restablecer el zoom</dd>
+          <dt><kbd>Ctrl</kbd> + rueda</dt><dd>Ampliar o reducir</dd>
+          <dt>Espacio + arrastrar</dt><dd>Desplazar el lienzo</dd>
+        </dl>
+
+        <h3>Herramientas</h3>
+        <dl>
+          <dt><kbd>H</kbd></dt><dd>Herramienta de mano</dd>
+          <dt><kbd>L</kbd></dt><dd>Herramienta de lazo</dd>
+          <dt><kbd>S</kbd></dt><dd>Crear o quitar espacio</dd>
+          <dt><kbd>C</kbd></dt><dd>Conexión global</dd>
+          <dt><kbd>E</kbd></dt><dd>Edición directa</dd>
+          <dt><kbd>?</kbd></dt><dd>Mostrar esta ayuda</dd>
+        </dl>
+      </section>
+    </div>
+  </dialog>
+
+  <input type="file" id="file-input" accept=".bpmn,.xml" hidden>
+
+  <script src="vendor/bpmn-modeler.production.min.js"></script>
+  <script src="vendor/properties-panel.js"></script>
+  <script src="vendor/bpmn-tools.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

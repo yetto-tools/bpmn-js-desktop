@@ -3,11 +3,18 @@ import bpmnIoPlugin from 'eslint-plugin-bpmn-io';
 const files = {
   ignored: [
     'dist',
-    'coverage'
+    'coverage',
+
+    // bundles y configuración generados para la aplicación autoalojada
+    'app/vendor',
+    'app/build/out',
+    'app/build/generated'
   ],
   build: [
     'test/config/*.js',
     'tasks/**/*.mjs',
+    'app/*.mjs',
+    'app/build/*.mjs',
     '*.js',
     '*.mjs'
   ],
