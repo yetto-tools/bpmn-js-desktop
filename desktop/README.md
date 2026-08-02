@@ -86,31 +86,24 @@ nueva versión.
 ## Publicar un release
 
 Lo hace GitHub Actions: `.github/workflows/DESKTOP_RELEASE.yml` construye el
-instalador en `windows-latest` y lo publica como release, usando el
-`GITHUB_TOKEN` del propio workflow (no hace falta configurar ningún secreto).
+instalador en `windows-latest` y lo publica, usando el `GITHUB_TOKEN` del
+propio workflow. No hay que configurar ningún secreto ni token personal.
 
 ```bash
 # 1. subir la version en desktop/package.json (por ejemplo a 1.1.0)
 # 2. commitear el cambio y etiquetar
 git commit -am "chore(desktop): version 1.1.0"
-git tag v1.1.0
+git tag desktop-v1.1.0
 git push origin desktop --tags
 ```
 
-El tag debe coincidir con el `version` de `desktop/package.json`, porque es de
-ahí de donde electron-builder saca el nombre del release y del `.exe`.
+**Los tags llevan el prefijo `desktop-`.** Este repositorio es un fork de
+bpmn-js y hereda todos sus tags (`v1.0.0` … `v18.22.0`), así que los tags `v*`
+a secas ya están ocupados y publicarían sobre releases que no son nuestros.
 
-También se puede lanzar a mano desde la pestaña **Actions → Desktop Release →
-Run workflow**, sin crear ningún tag.
+El número del tag debe coincidir con el `version` de `package.json`: de ahí
+salen el nombre del release y el del `.exe`.
 
-### Publicar desde tu equipo
-
-Alternativa al workflow, si prefieres subirlo tú mismo:
-
-```bash
-GH_TOKEN=... npm --prefix desktop run release
-```
-
-El token tiene que poder escribir en el repositorio. Si es un *fine-grained*
-PAT (`github_pat_...`), necesita el permiso **Contents: Read and write**; el
-scope `repo` de los tokens clásicos también sirve.
+También se puede lanzar a mano desde **Actions → Desktop Release → Run
+workflow**. Sin tag no publica release, pero deja el instalador como artefacto
+de la ejecución, que sirve para probar el empaquetado.

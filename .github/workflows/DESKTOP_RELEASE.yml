@@ -2,17 +2,17 @@ name: Desktop Release
 
 # Construye el instalador de Windows y publica el release en GitHub.
 #
-# Se dispara al empujar un tag `v*` (por ejemplo `v1.0.0`), o a mano desde la
-# pestaña Actions. La version del release la toma electron-builder de
-# `desktop/package.json`, asi que el tag debe coincidir con ese numero.
+# Se dispara al empujar un tag `desktop-v*` (por ejemplo `desktop-v1.0.0`), o a
+# mano desde la pestana Actions. El prefijo `desktop-` evita chocar con los tags
+# `v*` que este repositorio hereda del proyecto bpmn-js original.
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'desktop-v*'
   workflow_dispatch:
 
-# Necesario para que electron-builder pueda crear el release y subir el .exe.
+# Necesario para crear el release y subir el instalador.
 permissions:
   contents: write
 
@@ -48,10 +48,13 @@ jobs:
       - name: Instalar dependencias de Electron
         run: npm ci --prefix desktop
 
-      - name: Empaquetar y publicar el release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm --prefix desktop run release
+      - name: Empaquetar el instalador
+        run: npm --prefix desktop run dist
+
+      - name: Leer la version
+        id: version
+        shell: bash
+        run: echo "value=$(node -p "require('./desktop/package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Guardar el instalador como artefacto
         uses: actions/upload-artifact@v4
@@ -59,3 +62,36 @@ jobs:
           name: instalador-windows
           path: desktop/dist/*.exe
           if-no-files-found: error
+
+      - name: Publicar el release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Modelador BPMN ${{ steps.version.outputs.value }}
+          files: |
+            desktop/dist/*.exe
+            desktop/dist/*.exe.blockmap
+          body: |
+            Modelador BPMN como aplicacion de escritorio para Windows.
+
+            ## Instalacion
+
+            Descarga `Modelador-BPMN-${{ steps.version.outputs.value }}-instalador.exe` y ejecutalo.
+
+            - Instala por usuario: **no requiere permisos de administrador**.
+            - Permite elegir la carpeta de instalacion.
+            - Crea acceso directo en el escritorio y en el menu de inicio.
+            - Instalador en espanol, con desinstalador registrado en «Aplicaciones instaladas».
+
+            El instalador no esta firmado digitalmente, asi que Windows mostrara
+            el aviso de SmartScreen la primera vez: pulsa «Mas informacion» y
+            despues «Ejecutar de todas formas».
+
+            ## Que incluye
+
+            - Modelador BPMN completo con panel de propiedades.
+            - Validacion con bpmnlint y simulacion de tokens.
+            - Exportacion a PDF, SVG y PNG.
+            - Interfaz y menus en espanol.
+            - Autoguardado local, propio de cada instalacion.
+            - Funciona sin conexion: no necesita arrancar ningun servidor.
