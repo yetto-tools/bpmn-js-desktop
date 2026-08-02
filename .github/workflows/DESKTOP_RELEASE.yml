@@ -1,0 +1,61 @@
+name: Desktop Release
+
+# Construye el instalador de Windows y publica el release en GitHub.
+#
+# Se dispara al empujar un tag `v*` (por ejemplo `v1.0.0`), o a mano desde la
+# pestaña Actions. La version del release la toma electron-builder de
+# `desktop/package.json`, asi que el tag debe coincidir con ese numero.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+# Necesario para que electron-builder pueda crear el release y subir el .exe.
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Instalar dependencias del modelador
+        run: npm ci
+
+      - name: Construir la distribucion de bpmn-js
+        run: npm run distro
+
+      - name: Instalar dependencias del bundle de la app
+        run: npm ci --prefix app/build
+
+      - name: Construir los bundles de la app
+        run: npm --prefix app/build run build
+
+      - name: Sincronizar recursos en app/vendor
+        run: npm run app:sync
+
+      - name: Instalar dependencias de Electron
+        run: npm ci --prefix desktop
+
+      - name: Empaquetar y publicar el release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm --prefix desktop run release
+
+      - name: Guardar el instalador como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: instalador-windows
+          path: desktop/dist/*.exe
+          if-no-files-found: error

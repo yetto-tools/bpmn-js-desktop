@@ -82,3 +82,35 @@ npm run dist
 
 Sube el número de `version` en `package.json` para que el instalador refleje la
 nueva versión.
+
+## Publicar un release
+
+Lo hace GitHub Actions: `.github/workflows/DESKTOP_RELEASE.yml` construye el
+instalador en `windows-latest` y lo publica como release, usando el
+`GITHUB_TOKEN` del propio workflow (no hace falta configurar ningún secreto).
+
+```bash
+# 1. subir la version en desktop/package.json (por ejemplo a 1.1.0)
+# 2. commitear el cambio y etiquetar
+git commit -am "chore(desktop): version 1.1.0"
+git tag v1.1.0
+git push origin desktop --tags
+```
+
+El tag debe coincidir con el `version` de `desktop/package.json`, porque es de
+ahí de donde electron-builder saca el nombre del release y del `.exe`.
+
+También se puede lanzar a mano desde la pestaña **Actions → Desktop Release →
+Run workflow**, sin crear ningún tag.
+
+### Publicar desde tu equipo
+
+Alternativa al workflow, si prefieres subirlo tú mismo:
+
+```bash
+GH_TOKEN=... npm --prefix desktop run release
+```
+
+El token tiene que poder escribir en el repositorio. Si es un *fine-grained*
+PAT (`github_pat_...`), necesita el permiso **Contents: Read and write**; el
+scope `repo` de los tokens clásicos también sirve.
