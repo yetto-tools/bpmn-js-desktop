@@ -1104,6 +1104,7 @@ function layoutPalette() {
 }
 
 async function start() {
+
   // el panel arranca plegado y solo se abre si se pidió expresamente en una
   // sesión anterior: así se entra al modelador con todo el lienzo disponible
   setPropertiesVisible(localStorage.getItem(STORAGE_PANEL_KEY) === 'true');
