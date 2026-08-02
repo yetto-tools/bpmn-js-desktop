@@ -21,7 +21,7 @@
 
     <div class="app-toolbar" role="toolbar" aria-label="Herramientas del diagrama">
       <div class="app-toolbar-group">
-        <button type="button" data-action="new" title="Nuevo diagrama">
+        <button type="button" data-action="new" title="Nuevo diagrama (Ctrl+N)">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9l-6-6Zm0 2.5L16.5 9H13V5.5ZM7 5h4v6h6v8H7V5Z"/></svg>
           Nuevo
         </button>
@@ -38,7 +38,7 @@
       <div class="app-toolbar-group">
         <div class="app-menu" id="export-menu">
           <button type="button" class="app-menu-trigger" data-action="toggle-export"
-                  title="Exportar el diagrama como imagen o PDF"
+                  title="Exportar el diagrama como imagen o PDF (Ctrl+E)"
                   aria-haspopup="true" aria-expanded="false" aria-controls="export-menu-list">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8.2l3.1-3.1 1.4 1.4L12 15l-5.5-5.5 1.4-1.4L11 11.2V3ZM4 17h16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Z"/></svg>
             Exportar
@@ -88,7 +88,7 @@
 
       <div class="app-toolbar-group">
         <button type="button" data-action="toggle-simulation" id="toggle-simulation"
-                title="Simular el flujo del proceso paso a paso" aria-pressed="false">
+                title="Simular el flujo del proceso paso a paso (F5)" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm-2 3.5 6 3.5-6 3.5v-7Z"/></svg>
           Simular
         </button>
@@ -98,7 +98,7 @@
           Validar <span class="app-badge" id="problems-badge" hidden>0</span>
         </button>
         <button type="button" data-action="toggle-properties" id="toggle-properties"
-                title="Mostrar u ocultar el panel de propiedades" aria-pressed="false">
+                title="Mostrar u ocultar el panel de propiedades (F9)" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v12h8V6H5Zm10 0v12h4V6h-4Zm1 2h2v2h-2V8Zm0 4h2v2h-2v-2Z"/></svg>
           Propiedades
         </button>
@@ -135,7 +135,7 @@
           </div>
 
           <div class="app-actions-group">
-            <button type="button" data-action="toggle-shortcuts" title="Atajos de teclado (?)" aria-label="Atajos de teclado">
+            <button type="button" data-action="toggle-shortcuts" title="Atajos de teclado (F1)" aria-label="Atajos de teclado">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm1 2v8h16V8H4Zm1.5 1.5h2v2h-2v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm-9 3h2v2h-2v-2Zm3 0h6v2h-6v-2Zm7 0h2v2h-2v-2Z"/></svg>
             </button>
           </div>
@@ -257,8 +257,17 @@
       <section>
         <h3>Archivo</h3>
         <dl>
-          <dt><kbd>Ctrl</kbd> + <kbd>S</kbd></dt><dd>Descargar el diagrama</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>N</kbd></dt><dd>Nuevo diagrama</dd>
           <dt><kbd>Ctrl</kbd> + <kbd>O</kbd></dt><dd>Abrir un archivo</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>S</kbd></dt><dd>Descargar el diagrama</dd>
+        </dl>
+
+        <h3>Exportar</h3>
+        <dl>
+          <dt><kbd>Ctrl</kbd> + <kbd>E</kbd></dt><dd>Abrir el menú de exportación</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>Mayús</kbd> + <kbd>S</kbd></dt><dd>Imagen SVG</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>Mayús</kbd> + <kbd>P</kbd></dt><dd>Imagen PNG</dd>
+          <dt><kbd>Ctrl</kbd> + <kbd>Mayús</kbd> + <kbd>D</kbd></dt><dd>Documento PDF</dd>
         </dl>
 
         <h3>Edición</h3>
@@ -291,8 +300,15 @@
           <dt><kbd>S</kbd></dt><dd>Crear o quitar espacio</dd>
           <dt><kbd>C</kbd></dt><dd>Conexión global</dd>
           <dt><kbd>E</kbd></dt><dd>Edición directa</dd>
+        </dl>
+
+        <h3>Modelo</h3>
+        <dl>
+          <dt><kbd>F5</kbd></dt><dd>Simular el proceso</dd>
           <dt><kbd>F8</kbd></dt><dd>Validar el diagrama</dd>
-          <dt><kbd>?</kbd></dt><dd>Mostrar esta ayuda</dd>
+          <dt><kbd>Mayús</kbd> + <kbd>F8</kbd></dt><dd>Quitar las marcas de validación</dd>
+          <dt><kbd>F9</kbd></dt><dd>Panel de propiedades</dd>
+          <dt><kbd>F1</kbd> o <kbd>?</kbd></dt><dd>Mostrar esta ayuda</dd>
         </dl>
       </section>
     </div>

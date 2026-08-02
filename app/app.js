@@ -761,20 +761,56 @@ elements.fileInput.addEventListener('change', async event => {
 
 // #region atajos de teclado
 
+/**
+ * Teclas de función. Van sin modificador, así que se reservan para lo que se
+ * usa a menudo mientras se modela.
+ */
+const FUNCTION_SHORTCUTS = {
+  'F1': 'toggle-shortcuts',
+  'F5': 'toggle-simulation',
+  'F8': 'validate',
+  'F9': 'toggle-properties'
+};
+
+/** Con Ctrl (o Cmd en Mac). */
+const CTRL_SHORTCUTS = {
+  's': 'download-bpmn',
+  'o': 'open',
+  'n': 'new',
+  'e': 'toggle-export'
+};
+
+/** Con Ctrl y Mayúsculas: los formatos de exportación. */
+const CTRL_SHIFT_SHORTCUTS = {
+  's': 'download-svg',
+  'p': 'download-png',
+  'd': 'download-pdf'
+};
+
 document.addEventListener('keydown', event => {
+  const writing = /^(INPUT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable;
 
   // «?» abre la ayuda, salvo mientras se escribe en un campo
-  if (event.key === '?' && !/^(INPUT|TEXTAREA)$/.test(event.target.tagName) && !event.target.isContentEditable) {
+  if (event.key === '?' && !writing) {
     event.preventDefault();
     runAction('toggle-shortcuts');
 
     return;
   }
 
-  // F8 valida, como una compilación
-  if (event.key === 'F8') {
+  // Mayúsculas+F8 retira las marcas, al lado de la tecla que las pone
+  if (event.key === 'F8' && event.shiftKey) {
     event.preventDefault();
-    runAction('validate');
+    runAction('clear-validation');
+
+    return;
+  }
+
+  if (FUNCTION_SHORTCUTS[event.key]) {
+
+    // F5 recargaría la página, que aquí equivale a perder lo que no se guardó
+    event.preventDefault();
+    runAction(FUNCTION_SHORTCUTS[event.key]);
 
     return;
   }
@@ -784,19 +820,17 @@ document.addEventListener('keydown', event => {
   }
 
   const key = event.key.toLowerCase();
+  const action = event.shiftKey ? CTRL_SHIFT_SHORTCUTS[key] : CTRL_SHORTCUTS[key];
 
-  if (key === 's') {
+  if (action) {
     event.preventDefault();
-    runAction('download-bpmn');
-  }
+    runAction(action);
 
-  if (key === 'o') {
-    event.preventDefault();
-    runAction('open');
+    return;
   }
 
   // bpmn-js gestiona copiar y pegar; cortar lo añadimos nosotros
-  if (key === 'x' && !/^(INPUT|TEXTAREA)$/.test(event.target.tagName) && !event.target.isContentEditable) {
+  if (key === 'x' && !event.shiftKey && !writing) {
     event.preventDefault();
     runAction('cut');
   }

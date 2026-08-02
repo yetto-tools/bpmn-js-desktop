@@ -152,9 +152,9 @@ function buildMenu() {
         {
           label: 'Exportar',
           submenu: [
-            { label: 'Imagen SVG', click: () => trigger('download-svg') },
-            { label: 'Imagen PNG', click: () => trigger('download-png') },
-            { label: 'Documento PDF', click: () => trigger('download-pdf') }
+            pageItem('Imagen SVG', 'CmdOrCtrl+Shift+S', 'download-svg'),
+            pageItem('Imagen PNG', 'CmdOrCtrl+Shift+P', 'download-png'),
+            pageItem('Documento PDF', 'CmdOrCtrl+Shift+D', 'download-pdf')
           ]
         },
         { type: 'separator' },
@@ -179,10 +179,10 @@ function buildMenu() {
         pageItem('Alejar', 'CmdOrCtrl+-', 'zoom-out'),
         pageItem('Ajustar al lienzo', 'CmdOrCtrl+0', 'zoom-fit'),
         { type: 'separator' },
-        { label: 'Panel de propiedades', click: () => trigger('toggle-properties') },
+        pageItem('Panel de propiedades', 'F9', 'toggle-properties'),
         pageItem('Validar el modelo', 'F8', 'validate'),
-        { label: 'Quitar marcas de validación', click: () => trigger('clear-validation') },
-        { label: 'Simulación', click: () => trigger('toggle-simulation') },
+        pageItem('Quitar marcas de validación', 'Shift+F8', 'clear-validation'),
+        pageItem('Simulación', 'F5', 'toggle-simulation'),
         { type: 'separator' },
         { label: 'Pantalla completa', role: 'togglefullscreen' },
         { label: 'Herramientas de desarrollo', role: 'toggleDevTools' }
