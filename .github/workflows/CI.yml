@@ -11,6 +11,12 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    # A nivel de job para que el `if` del paso de coverage pueda leerlo: las
+    # variables declaradas en un paso no estan disponibles en su propia
+    # condicion.
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
     steps:
     - name: Checkout
       uses: actions/checkout@v7
@@ -34,13 +40,14 @@ jobs:
       env:
         TEST_BROWSERS: ${{ matrix.browser }}
       run: xvfb-run npm run all
+    # Este fork no tiene configurado CODECOV_TOKEN. Sin el secreto la subida
+    # falla («not valid tokenless upload») y tumbaba el job entero, asi que solo
+    # se ejecuta cuando el token existe.
     - name: Upload coverage
-      if: matrix.browser == 'ChromeHeadless'
+      if: matrix.browser == 'ChromeHeadless' && env.CODECOV_TOKEN != ''
       uses: codecov/codecov-action@v7
       with:
         fail_ci_if_error: true
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build_os:
 
