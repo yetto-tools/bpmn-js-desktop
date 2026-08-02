@@ -12,6 +12,10 @@ const path = require('node:path');
 /** Carpeta con la aplicación web (queda dentro del paquete). */
 const APP_DIR = path.join(__dirname, 'web');
 
+/** Datos del proyecto, para el diálogo «Acerca de» y el menú de ayuda. */
+const REPOSITORY_URL = 'https://github.com/yetto-tools/bpmn-js-desktop';
+const AUTHOR = 'Erick Rashon <ergonzalez209@gmail.com>';
+
 let server = null;
 let mainWindow = null;
 
@@ -189,18 +193,33 @@ function buildMenu() {
       submenu: [
         { label: 'Atajos de teclado', accelerator: 'F1', click: () => trigger('toggle-shortcuts') },
         { type: 'separator' },
+        { label: 'Repositorio del proyecto', click: () => shell.openExternal(REPOSITORY_URL) },
+        { type: 'separator' },
         {
           label: 'Acerca de',
-          click: () => dialog.showMessageBox(mainWindow, {
-            type: 'info',
-            title: 'Acerca de',
-            message: 'Modelador BPMN',
-            detail:
-              `Versión ${app.getVersion()}\n` +
-              'Modelador de diagramas BPMN 2.0 en español.\n\n' +
-              'Funciona sin conexión: todo el modelado ocurre en este equipo.',
-            buttons: [ 'Cerrar' ]
-          })
+          click: async () => {
+            const { response } = await dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: 'Acerca de',
+              message: 'Modelador BPMN',
+              detail:
+                `Versión ${app.getVersion()}\n` +
+                'Modelador de diagramas BPMN 2.0 en español.\n\n' +
+                'Funciona sin conexión: todo el modelado ocurre en este equipo.\n\n' +
+                `Autor: ${AUTHOR}\n` +
+                `Repositorio: ${REPOSITORY_URL}\n` +
+                'Licencia MIT.\n\n' +
+                'Construido sobre bpmn-js, de bpmn.io (Camunda Services GmbH),\n' +
+                'y Electron.',
+              buttons: [ 'Cerrar', 'Abrir el repositorio' ],
+              defaultId: 0,
+              cancelId: 0
+            });
+
+            if (response === 1) {
+              shell.openExternal(REPOSITORY_URL);
+            }
+          }
         }
       ]
     }

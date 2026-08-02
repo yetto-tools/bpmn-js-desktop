@@ -4,6 +4,16 @@
   "private": true,
   "description": "Modelador BPMN como aplicación de escritorio",
   "main": "main.js",
+  "author": {
+    "name": "Erick Rashon",
+    "email": "ergonzalez209@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/yetto-tools/bpmn-js-desktop",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yetto-tools/bpmn-js-desktop.git"
+  },
   "scripts": {
     "prepare-app": "node prepare-app.mjs",
     "prestart": "node prepare-app.mjs",
@@ -20,7 +30,7 @@
   "build": {
     "appId": "io.local.modelador-bpmn",
     "productName": "Modelador BPMN",
-    "copyright": "Modelador BPMN",
+    "copyright": "Copyright © 2026 Erick Rashon. Licencia MIT.",
     "directories": {
       "output": "dist",
       "buildResources": "recursos"

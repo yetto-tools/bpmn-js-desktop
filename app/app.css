@@ -661,4 +661,40 @@ body {
 .djs-palette {
   top: 20px;
   left: 20px;
+
+  /* En pantallas bajas la paleta se salía del lienzo y las últimas
+     herramientas quedaban inalcanzables. diagram-js solo sabe pasar a dos
+     columnas (`_needsCollapse`), lo que no basta cuando la ventana es muy
+     baja, así que además se limita la altura y se permite desplazarla. */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - 40px);
+
+  /* 6px más que los 48px de diagram-js, para la barra de desplazamiento */
+  width: 54px;
+}
+
+.djs-palette .djs-palette-entries {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  /* sin esto el contenedor flex no encoge por debajo de su contenido y no
+     llegaría a aparecer la barra de desplazamiento */
+  min-height: 0;
+}
+
+/* Barra de desplazamiento estrecha: con la del sistema, en dos columnas los
+   iconos no cabrían y la paleta volvería a una sola columna. */
+
+.djs-palette .djs-palette-entries::-webkit-scrollbar {
+  width: 6px;
+}
+
+.djs-palette .djs-palette-entries::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.djs-palette.two-column.open {
+  width: 100px;
 }
