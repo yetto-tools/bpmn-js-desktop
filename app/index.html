@@ -98,7 +98,7 @@
           Validar <span class="app-badge" id="problems-badge" hidden>0</span>
         </button>
         <button type="button" data-action="toggle-properties" id="toggle-properties"
-                title="Mostrar u ocultar el panel de propiedades" aria-pressed="true">
+                title="Mostrar u ocultar el panel de propiedades" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v12h8V6H5Zm10 0v12h4V6h-4Zm1 2h2v2h-2V8Zm0 4h2v2h-2v-2Z"/></svg>
           Propiedades
         </button>
@@ -176,7 +176,9 @@
       </section>
     </div>
 
-    <aside id="properties" class="app-properties" aria-label="Propiedades del elemento"></aside>
+    <!-- plegado de salida: `start()` lo abre si se dejó abierto la última vez.
+         Sin el `hidden` aquí, el panel asomaba un instante al cargar. -->
+    <aside id="properties" class="app-properties" aria-label="Propiedades del elemento" hidden></aside>
   </main>
 
   <div class="app-drop-hint" id="drop-hint" hidden>Suelta aquí un archivo .bpmn para abrirlo</div>

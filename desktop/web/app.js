@@ -1104,7 +1104,9 @@ function layoutPalette() {
 }
 
 async function start() {
-  setPropertiesVisible(localStorage.getItem(STORAGE_PANEL_KEY) !== 'false');
+  // el panel arranca plegado y solo se abre si se pidió expresamente en una
+  // sesión anterior: así se entra al modelador con todo el lienzo disponible
+  setPropertiesVisible(localStorage.getItem(STORAGE_PANEL_KEY) === 'true');
   updateClipboardButtons();
 
   // por defecto, validación bajo demanda: nada de marcas al abrir
