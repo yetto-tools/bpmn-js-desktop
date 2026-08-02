@@ -1,6 +1,6 @@
 {
   "name": "modelador-bpmn-desktop",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "Modelador BPMN como aplicación de escritorio",
   "main": "main.js",
