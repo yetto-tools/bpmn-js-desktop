@@ -21,43 +21,84 @@
 
     <div class="app-toolbar" role="toolbar" aria-label="Herramientas del diagrama">
       <div class="app-toolbar-group">
-        <button type="button" data-action="new" title="Nuevo diagrama">Nuevo</button>
-        <button type="button" data-action="open" title="Abrir un archivo .bpmn (Ctrl+O)">Abrir…</button>
-        <button type="button" data-action="download-bpmn" title="Descargar el diagrama como archivo .bpmn (Ctrl+S)">Guardar</button>
+        <button type="button" data-action="new" title="Nuevo diagrama">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9l-6-6Zm0 2.5L16.5 9H13V5.5ZM7 5h4v6h6v8H7V5Z"/></svg>
+          Nuevo
+        </button>
+        <button type="button" data-action="open" title="Abrir un archivo .bpmn (Ctrl+O)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h5.6l1.7 2H20a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm0 4v8h16V9H4Z"/></svg>
+          Abrir…
+        </button>
+        <button type="button" data-action="download-bpmn" title="Descargar el diagrama como archivo .bpmn (Ctrl+S)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm2 1v6h8V4H7Zm4 1h2v4h-2V5ZM7 14h10v6H7v-6Z"/></svg>
+          Guardar
+        </button>
       </div>
 
       <div class="app-toolbar-group">
-        <button type="button" data-action="download-svg" title="Descargar el diagrama como imagen SVG">SVG</button>
-        <button type="button" data-action="download-png" title="Descargar el diagrama como imagen PNG">PNG</button>
-        <button type="button" data-action="download-pdf" title="Descargar el diagrama como PDF">PDF</button>
+        <button type="button" data-action="download-svg" title="Descargar el diagrama como imagen SVG">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8.2l3.1-3.1 1.4 1.4L12 15l-5.5-5.5 1.4-1.4L11 11.2V3ZM4 17h16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Z"/></svg>
+          SVG
+        </button>
+        <button type="button" data-action="download-png" title="Descargar el diagrama como imagen PNG">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8.2l3.1-3.1 1.4 1.4L12 15l-5.5-5.5 1.4-1.4L11 11.2V3ZM4 17h16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Z"/></svg>
+          PNG
+        </button>
+        <button type="button" data-action="download-pdf" title="Descargar el diagrama como PDF">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8.2l3.1-3.1 1.4 1.4L12 15l-5.5-5.5 1.4-1.4L11 11.2V3ZM4 17h16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Z"/></svg>
+          PDF
+        </button>
       </div>
 
       <div class="app-toolbar-group">
-        <button type="button" data-action="undo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer">↶</button>
-        <button type="button" data-action="redo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer">↷</button>
+        <button type="button" data-action="undo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V4l-5 4.5L8 13v-3h5a4 4 0 0 1 0 8h-3v2h3a6 6 0 0 0 0-12H8Z"/></svg>
+        </button>
+        <button type="button" data-action="redo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 7V4l5 4.5L16 13v-3h-5a4 4 0 0 0 0 8h3v2h-3a6 6 0 0 1 0-12h5Z"/></svg>
+        </button>
       </div>
 
       <div class="app-toolbar-group">
-        <button type="button" data-action="cut" id="cut" title="Cortar la selección (Ctrl+X)" aria-label="Cortar">✂</button>
-        <button type="button" data-action="copy" id="copy" title="Copiar la selección (Ctrl+C)" aria-label="Copiar">⧉</button>
-        <button type="button" data-action="paste" title="Pegar (Ctrl+V)" aria-label="Pegar">📋</button>
+        <button type="button" data-action="cut" id="cut" title="Cortar la selección (Ctrl+X)" aria-label="Cortar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.6 8.2 14 15l1.6 2.4a3 3 0 1 0 1.5-1.1L9.9 4.6 8.4 5.7l2.3 3.6-1.1 1.6-1.1-1.6a3 3 0 1 0-1.5 1.1L8.5 12l-1.5 2.3a3 3 0 1 0 1.5 1.1L14 7.4l-1.2-1.8-3.2 2.6Zm-3.2 1a1.4 1.4 0 1 1 0-2.8 1.4 1.4 0 0 1 0 2.8Zm0 8.6a1.4 1.4 0 1 1 0-2.8 1.4 1.4 0 0 1 0 2.8Zm11.2 0a1.4 1.4 0 1 1 0-2.8 1.4 1.4 0 0 1 0 2.8Z"/></svg>
+        </button>
+        <button type="button" data-action="copy" id="copy" title="Copiar la selección (Ctrl+C)" aria-label="Copiar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h9a1 1 0 0 1 1 1v12h-2V5H9V3ZM6 7h9a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm1 2v10h7V9H7Z"/></svg>
+        </button>
+        <button type="button" data-action="paste" title="Pegar (Ctrl+V)" aria-label="Pegar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2h6a1 1 0 0 1 1 1v1h2a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h2V3a1 1 0 0 1 1-1Zm1 2v1h4V4h-4ZM7 6v14h10V6h-2v1H9V6H7Z"/></svg>
+        </button>
       </div>
 
       <div class="app-toolbar-group">
-        <button type="button" data-action="zoom-out" title="Alejar" aria-label="Alejar">−</button>
-        <button type="button" data-action="zoom-fit" title="Ajustar al lienzo" aria-label="Ajustar al lienzo">⤢</button>
-        <button type="button" data-action="zoom-in" title="Acercar" aria-label="Acercar">+</button>
+        <button type="button" data-action="zoom-out" title="Alejar" aria-label="Alejar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 1 1-4.2 12.6l-3.1 3.1-1.4-1.4 3.1-3.1A7 7 0 0 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM7 9h6v2H7V9Z"/></svg>
+        </button>
+        <button type="button" data-action="zoom-fit" title="Ajustar al lienzo" aria-label="Ajustar al lienzo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4V4Zm10 0h6v6h-2V6h-4V4ZM4 14h2v4h4v2H4v-6Zm14 0h2v6h-6v-2h4v-4Z"/></svg>
+        </button>
+        <button type="button" data-action="zoom-in" title="Acercar" aria-label="Acercar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 1 1-4.2 12.6l-3.1 3.1-1.4-1.4 3.1-3.1A7 7 0 0 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM9 7h2v2h2v2h-2v2H9v-2H7V9h2V7Z"/></svg>
+        </button>
       </div>
 
       <div class="app-toolbar-group">
         <button type="button" data-action="toggle-simulation" id="toggle-simulation"
-                title="Simular el flujo del proceso paso a paso" aria-pressed="false">Simular</button>
+                title="Simular el flujo del proceso paso a paso" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm-2 3.5 6 3.5-6 3.5v-7Z"/></svg>
+          Simular
+        </button>
         <button type="button" data-action="validate" id="validate"
                 title="Comprobar el diagrama y marcar los problemas (F8)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6.5c0 4.6 3.2 8.9 8 10.5 4.8-1.6 8-5.9 8-10.5V5l-8-3Zm0 2.2 6 2.2v5.1c0 3.6-2.4 7-6 8.4-3.6-1.4-6-4.8-6-8.4V6.4l6-2.2Zm-1 10.4-2.7-2.7 1.4-1.4 1.3 1.3 3.9-3.9 1.4 1.4-5.3 5.3Z"/></svg>
           Validar <span class="app-badge" id="problems-badge" hidden>0</span>
         </button>
         <button type="button" data-action="toggle-properties" id="toggle-properties"
-                title="Mostrar u ocultar el panel de propiedades" aria-pressed="true">Propiedades</button>
+                title="Mostrar u ocultar el panel de propiedades" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v12h8V6H5Zm10 0v12h4V6h-4Zm1 2h2v2h-2V8Zm0 4h2v2h-2v-2Z"/></svg>
+          Propiedades
+        </button>
       </div>
     </div>
 

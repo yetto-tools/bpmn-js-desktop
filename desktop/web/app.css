@@ -67,6 +67,9 @@ body {
 }
 
 .app-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   min-width: 30px;
   height: 28px;
   padding: 0 10px;
@@ -77,6 +80,16 @@ body {
   font: inherit;
   line-height: 1;
   cursor: pointer;
+}
+
+/* Los iconos toman el color del botón, así acompañan al estado: se atenúan
+   al deshabilitarlo y se tiñen al pasar por encima. */
+
+.app-toolbar button svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: currentColor;
 }
 
 .app-toolbar button:hover:not(:disabled) {
