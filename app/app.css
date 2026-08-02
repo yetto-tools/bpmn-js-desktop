@@ -658,43 +658,99 @@ body {
 
 /* PALETA: dejamos espacio bajo la cabecera */
 
+/* La paleta se adapta a la altura disponible: cuando las herramientas no
+   caben en una columna, pasan a la siguiente y la paleta se ensancha. En
+   ventanas bajas las últimas quedaban antes fuera del lienzo, sin forma de
+   alcanzarlas, porque diagram-js solo sabe pasar a dos columnas
+   (`_needsCollapse`) y con poca altura eso no basta. */
+
 .djs-palette {
   top: 20px;
   left: 20px;
 
-  /* En pantallas bajas la paleta se salía del lienzo y las últimas
-     herramientas quedaban inalcanzables. diagram-js solo sabe pasar a dos
-     columnas (`_needsCollapse`), lo que no basta cuando la ventana es muy
-     baja, así que además se limita la altura y se permite desplazarla. */
-  display: flex;
-  flex-direction: column;
+  /* Lado de cada casilla. `layoutPalette()` lo baja cuando ni repartiendo en
+     columnas caben las herramientas, para encogerlas en vez de recortarlas. */
+  --palette-cell: 46px;
+
+  /* el ancho lo marcan las columnas que ocupe la rejilla, en vez de los 48px
+     de una sola columna que fija diagram-js */
+  width: max-content;
+
+  /* el 100% es la altura del lienzo, no la de la ventana: la aplicación
+     tiene cabecera propia */
   max-height: calc(100% - 40px);
 
-  /* 6px más que los 48px de diagram-js, para la barra de desplazamiento */
-  width: 54px;
+  display: flex;
+  flex-direction: column;
 }
 
-.djs-palette .djs-palette-entries {
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  /* sin esto el contenedor flex no encoge por debajo de su contenido y no
-     llegaría a aparecer la barra de desplazamiento */
-  min-height: 0;
-}
-
-/* Barra de desplazamiento estrecha: con la del sistema, en dos columnas los
-   iconos no cabrían y la paleta volvería a una sola columna. */
-
-.djs-palette .djs-palette-entries::-webkit-scrollbar {
-  width: 6px;
-}
-
-.djs-palette .djs-palette-entries::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.25);
-}
+/* diagram-js alterna esta clase por su cuenta y le pone un ancho fijo de dos
+   columnas, que aquí sobra */
 
 .djs-palette.two-column.open {
-  width: 100px;
+  width: auto;
+}
+
+/* Rejilla que fluye por columnas: se llenan de arriba abajo y, al agotarse la
+   altura, se abre otra columna. Con `flex-wrap` el ancho de la paleta no
+   contaba las columnas nuevas (el tamaño intrínseco de un flex ignora el
+   salto) y se derramaban fuera del recuadro; en una rejilla sí cuentan.
+
+   `layoutPalette()` en app.js fija la altura, que es lo que decide cuántas
+   filas caben. */
+
+.djs-palette .djs-palette-entries {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--palette-cell);
+  align-content: start;
+  justify-content: start;
+}
+
+/* los iconos acompañan al tamaño de la casilla; diagram-js los deja fijos en
+   30px, que se saldrían al encogerla */
+
+.djs-palette .entry,
+.djs-palette .djs-palette-toggle {
+  font-size: calc(var(--palette-cell) * 0.65);
+}
+
+/* diagram-js reparte las herramientas en grupos; sin esto la rejilla
+   colocaría los nueve grupos, no las quince herramientas, y el reparto no
+   cuadraría con el alto disponible */
+
+.djs-palette .djs-palette-entries .group {
+  display: contents;
+}
+
+/* El separador ocupaba una casilla entera, y por esa sola casilla la paleta
+   saltaba a dos columnas cuando las quince herramientas cabían en una. Con el
+   reparto en columnas ya no separa nada, así que se retira. */
+
+.djs-palette .djs-palette-entries .separator {
+  display: none;
+}
+
+/* diagram-js coloca las entradas con `float`, que en una rejilla no pinta
+   nada y estorba al reparto en columnas.
+
+   El alto va atado a la casilla igual que el ancho: sin fijarlo, al encoger
+   la casilla las herramientas conservaban su alto natural y se salían del
+   recuadro por abajo. */
+
+.djs-palette .entry,
+.djs-palette .separator {
+  float: none;
+  box-sizing: border-box;
+  width: var(--palette-cell);
+  height: var(--palette-cell);
+  padding: 0;
+  line-height: var(--palette-cell);
+}
+
+/* el limpiador de floats seria un elemento flex mas y abriria una columna
+   vacia */
+
+.djs-palette .djs-palette-entries::after {
+  display: none;
 }

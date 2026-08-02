@@ -902,6 +902,119 @@ window.addEventListener('beforeunload', event => {
   }
 });
 
+/* #region paleta adaptable */
+
+/** Lado de cada casilla de la paleta, el mismo que usa diagram-js. */
+const PALETTE_CELL = 46;
+
+/** Por debajo de esto los iconos dejan de distinguirse. */
+const PALETTE_CELL_MIN = 32;
+
+/** Aire que se deja alrededor de la paleta. */
+const PALETTE_GAP = 20;
+
+/**
+ * Calcula el hueco vertical del que dispone la paleta.
+ *
+ * Se parte de dónde arranca de verdad en lugar de dar por hecho que son los
+ * 20px del CSS, porque la aplicación tiene cabecera propia y la desplaza más
+ * abajo. Y se descuenta la barra de acciones flotante, que va por encima de
+ * la paleta y le tapaba la última fila.
+ *
+ * @param {Element} palette
+ * @param {DOMRect} containerRect
+ * @returns {number}
+ */
+function paletteRoom(palette, containerRect) {
+  const toggle = palette.querySelector('.djs-palette-toggle');
+  const actions = document.querySelector('.app-actions');
+
+  const top = palette.getBoundingClientRect().top - containerRect.top;
+  const reserved = PALETTE_GAP + (toggle ? toggle.offsetHeight : 0);
+
+  let available = containerRect.height - top - reserved;
+
+  if (actions) {
+    const limit = actions.getBoundingClientRect().top - containerRect.top;
+
+    available = Math.min(available, limit - top - PALETTE_GAP / 2);
+  }
+
+  return available;
+}
+
+/**
+ * Reparte la paleta en tantas columnas como haga falta para que quepa.
+ *
+ * diagram-js solo alterna entre una y dos columnas (`Palette._needsCollapse`),
+ * así que en ventanas bajas las últimas herramientas quedaban fuera del lienzo
+ * y no había forma de alcanzarlas. El CSS ya las reparte en columnas, pero la
+ * altura y el ancho se fijan desde aquí: la paleta está posicionada en
+ * absoluto y su ancho se resuelve antes que el reparto, con lo que se
+ * quedaría estrecha y las columnas de más se saldrían del recuadro.
+ */
+function layoutPalette() {
+  const palette = document.querySelector('.djs-palette');
+  const entries = palette && palette.querySelector('.djs-palette-entries');
+
+  if (!palette || !entries || !palette.classList.contains('open')) {
+    return;
+  }
+
+  // se cuentan las herramientas, no los grupos que las envuelven: el CSS los
+  // hace transparentes para la rejilla, y esconde los separadores
+  const items = entries.querySelectorAll('.entry').length;
+  const containerRect = palette.parentNode.getBoundingClientRect();
+  const available = paletteRoom(palette, containerRect);
+
+  if (!items || available <= 0) {
+    return;
+  }
+
+  const left = palette.getBoundingClientRect().left - containerRect.left;
+  const room = containerRect.width - left - PALETTE_GAP;
+
+  // El reparto se calcula aquí en vez de dejarlo en manos de `auto-fill`: con
+  // muchas columnas el navegador no hacía coincidir el ancho de la rejilla
+  // con el reparto, y las sobrantes caían en filas de más, fuera de la vista.
+  //
+  // Se prueba con la casilla a tamaño natural y, si aun repartiendo en todas
+  // las columnas que caben a lo ancho no alcanzan, se encoge: mejor iconos
+  // pequeños que herramientas inalcanzables.
+  let cell = PALETTE_CELL;
+  let rows, columns;
+
+  for (;;) {
+    const maxRows = Math.max(1, Math.floor(available / cell));
+    const maxColumns = Math.max(1, Math.floor(room / cell));
+
+    // las columnas justas para repartirlas, sin pasar de las que caben
+    columns = Math.min(maxColumns, Math.ceil(items / maxRows));
+
+    // y las filas que exige ese número de columnas: si se recorta por lo
+    // ancho hacen falta más, y sin recalcularlas quedaban herramientas sin
+    // casilla, apiladas fuera del recuadro
+    rows = Math.ceil(items / columns);
+
+    if (rows <= maxRows || cell <= PALETTE_CELL_MIN) {
+      break;
+    }
+
+    cell -= 2;
+  }
+
+  palette.style.setProperty('--palette-cell', `${cell}px`);
+  entries.style.gridTemplateRows = `repeat(${rows}, ${cell}px)`;
+  entries.style.height = `${rows * cell}px`;
+
+  // el recuadro de la paleta suma su propio borde al ancho de las columnas
+  const style = getComputedStyle(palette);
+  const frame = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth) +
+    parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+
+  palette.style.width = `${columns * cell + frame}px`;
+}
+
 async function start() {
   setPropertiesVisible(localStorage.getItem(STORAGE_PANEL_KEY) !== 'false');
   updateClipboardButtons();
@@ -929,6 +1042,12 @@ async function start() {
 
   await openDiagram(EMPTY_DIAGRAM, DEFAULT_FILE_NAME);
 }
+
+// La paleta se recoloca al cambiar el tamaño de la ventana y cada vez que
+// diagram-js la reconstruye. Hace falta escuchar `resize` del navegador:
+// `canvas.resized` solo se emite cuando alguien lo pide a mano.
+window.addEventListener('resize', layoutPalette);
+modeler.get('eventBus').on([ 'canvas.resized', 'palette.changed', 'import.done' ], layoutPalette);
 
 start();
 
