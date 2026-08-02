@@ -1,0 +1,56 @@
+{
+  "name": "modelador-bpmn-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modelador BPMN como aplicación de escritorio",
+  "main": "main.js",
+  "scripts": {
+    "prepare-app": "node prepare-app.mjs",
+    "prestart": "node prepare-app.mjs",
+    "start": "electron .",
+    "predist": "node prepare-app.mjs",
+    "dist": "electron-builder --win",
+    "predist:dir": "node prepare-app.mjs",
+    "dist:dir": "electron-builder --win --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "io.local.modelador-bpmn",
+    "productName": "Modelador BPMN",
+    "copyright": "Modelador BPMN",
+    "directories": {
+      "output": "dist",
+      "buildResources": "recursos"
+    },
+    "files": [
+      "main.js",
+      "web/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "recursos/icon.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Modelador BPMN",
+      "artifactName": "Modelador-BPMN-${version}-instalador.${ext}",
+      "installerLanguages": [
+        "es_ES"
+      ],
+      "language": "1034"
+    }
+  },
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
+}

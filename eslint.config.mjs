@@ -8,13 +8,19 @@ const files = {
     // bundles y configuración generados para la aplicación autoalojada
     'app/vendor',
     'app/build/out',
-    'app/build/generated'
+    'app/build/generated',
+
+    // copia empaquetada de la aplicación y salida del instalador
+    'desktop/web',
+    'desktop/dist'
   ],
   build: [
     'test/config/*.js',
     'tasks/**/*.mjs',
     'app/*.mjs',
     'app/build/*.mjs',
+    'desktop/*.js',
+    'desktop/*.mjs',
     '*.js',
     '*.mjs'
   ],

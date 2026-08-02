@@ -120,5 +120,19 @@ export default [
         'bpmn-js-color-picker/colors/color-picker.css'
       ])
     ]
+  },
+
+  // exportación a PDF, cargada bajo demanda
+  {
+    ...shared,
+    input: join(buildDir, 'entry-pdf.js'),
+    output: {
+      format: 'iife',
+      name: 'BpmnPdf',
+      file: join(buildDir, 'out', 'pdf-export.js'),
+
+      // jsPDF carga módulos opcionales con import(); los incluimos en el bundle
+      inlineDynamicImports: true
+    }
   }
 ];

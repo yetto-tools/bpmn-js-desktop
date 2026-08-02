@@ -43,7 +43,8 @@ const panelFiles = [
   'bpmn-tools.js',
   'bpmn-js-bpmnlint.css',
   'bpmn-js-token-simulation.css',
-  'color-picker.css'
+  'color-picker.css',
+  'pdf-export.js'
 ];
 
 const missing = panelFiles.filter(file => !existsSync(join(panelDir, file)));

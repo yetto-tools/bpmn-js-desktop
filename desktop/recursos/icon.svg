@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#1e6fd9"/>
+
+  <!-- evento de inicio -->
+  <circle cx="120" cy="256" r="40" fill="none" stroke="#ffffff" stroke-width="16"/>
+
+  <!-- conexión -->
+  <path d="M168 256 h44" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M206 240 l24 16 -24 16 z" fill="#ffffff"/>
+
+  <!-- tarea -->
+  <rect x="236" y="196" width="128" height="120" rx="20" fill="none" stroke="#ffffff" stroke-width="16"/>
+
+  <!-- conexión -->
+  <path d="M380 256 h28" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M402 240 l24 16 -24 16 z" fill="#ffffff"/>
+
+  <!-- evento de fin -->
+  <circle cx="446" cy="256" r="30" fill="none" stroke="#ffffff" stroke-width="24"/>
+</svg>
