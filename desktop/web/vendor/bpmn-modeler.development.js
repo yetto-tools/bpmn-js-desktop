@@ -8,7 +8,7 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2026-07-26
+ * Date: 2026-08-02
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -4542,6 +4542,17 @@
 	 */
 	function isLabel(value) {
 	  return isObject(value) && has(value, 'labelTarget');
+	}
+
+	/**
+	 * Checks whether a value is an instance of Root.
+	 *
+	 * @param {any} value
+	 *
+	 * @return {boolean}
+	 */
+	function isRoot(value) {
+	  return isObject(value) && isNil(value.parent);
 	}
 
 	/**
@@ -17088,6 +17099,23 @@
 	 */
 
 	/**
+	 * Padding added around the diagram bounds on SVG export.
+	 *
+	 * `getBBox` returns the geometry bounds only, excluding element strokes, so
+	 * without padding strokes at the diagram edges get clipped. Historically this
+	 * padding was provided implicitly by element outlines, which diagram-js now
+	 * creates lazily (diagram-js@15.19, bpmn-io/diagram-js#1064).
+	 */
+	const EXPORT_PADDING = 5;
+
+	/**
+	 * Class set on the canvas container to hide element outlines, which diagram-js
+	 * excludes from rendering while present. Applied when measuring the export
+	 * bounds so lazily created outlines do not skew them.
+	 */
+	const OUTLINE_HIDDEN_CLS = 'djs-outline-hidden';
+
+	/**
 	 * @template T
 	 *
 	 * @typedef { import('diagram-js/lib/core/EventBus').default<T> } EventBus
@@ -17537,15 +17565,31 @@
 	    const contents = innerSVG(contentNode),
 	          defs = defsNode ? '<defs>' + innerSVG(defsNode) + '</defs>' : '';
 
-	    const bbox = contentNode.getBBox();
+	    // hide outlines so they do not skew the measured bounds
+	    const container = canvas.getContainer();
+
+	    classes$1(container).add(OUTLINE_HIDDEN_CLS);
+
+	    let bbox;
+
+	    try {
+	      bbox = contentNode.getBBox();
+	    } finally {
+	      classes$1(container).remove(OUTLINE_HIDDEN_CLS);
+	    }
+
+	    const x = bbox.x - EXPORT_PADDING,
+	          y = bbox.y - EXPORT_PADDING,
+	          width = bbox.width + EXPORT_PADDING * 2,
+	          height = bbox.height + EXPORT_PADDING * 2;
 
 	    svg =
 	      '<?xml version="1.0" encoding="utf-8"?>\n' +
 	      '<!-- created with bpmn-js / http://bpmn.io -->\n' +
 	      '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
 	      '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
-	      'width="' + bbox.width + '" height="' + bbox.height + '" ' +
-	      'viewBox="' + bbox.x + ' ' + bbox.y + ' ' + bbox.width + ' ' + bbox.height + '" version="1.1">' +
+	      'width="' + width + '" height="' + height + '" ' +
+	      'viewBox="' + x + ' ' + y + ' ' + width + ' ' + height + '" version="1.1">' +
 	      defs + contents +
 	      '</svg>';
 	  } catch (e) {
@@ -43652,7 +43696,45 @@
 	    return false;
 	  }
 
+	  // do not copy message flows unless both connected participants are copied,
+	  // too; otherwise they would end up in an invalid organizational context
+	  if (is(element, 'bpmn:MessageFlow') && !canCopyMessageFlow(elements, element)) {
+	    return false;
+	  }
+
 	  return true;
+	}
+
+	/**
+	 * A message flow may only be copied if both of its participants are copied,
+	 * too. Otherwise it would be pasted into an invalid organizational context,
+	 * e.g. a plain process.
+	 *
+	 * @param {Element[]} elements
+	 * @param {Connection} connection
+	 *
+	 * @return {boolean}
+	 */
+	function canCopyMessageFlow(elements, connection) {
+	  var sourceParticipant = getParticipant(connection.source),
+	      targetParticipant = getParticipant(connection.target);
+
+	  return includes$2(elements, sourceParticipant) && includes$2(elements, targetParticipant);
+	}
+
+	/**
+	 * @param {Element} element
+	 *
+	 * @return {Element|null}
+	 */
+	function getParticipant(element) {
+	  for (; element; element = element.parent) {
+	    if (is(element, 'bpmn:Participant')) {
+	      return element;
+	    }
+	  }
+
+	  return null;
 	}
 
 	/**
@@ -62350,6 +62432,13 @@
 	   * @param {Element} element
 	   */
 	  function createElementOutline(element) {
+
+	    // root elements have no outline; creating one would append a never-updated
+	    // rect to the untransformed root layer, polluting getActiveLayer().getBBox()
+	    if (isRoot(element)) {
+	      return;
+	    }
+
 	    self.createOutline(element);
 	  }
 
