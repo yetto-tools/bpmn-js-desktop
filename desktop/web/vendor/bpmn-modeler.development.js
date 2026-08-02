@@ -1,5 +1,5 @@
 /*!
- * bpmn-js - bpmn-modeler v18.22.0
+ * bpmn-js - bpmn-modeler v18.22.1
  *
  * Copyright (c) 2014-present, camunda Services GmbH
  *
