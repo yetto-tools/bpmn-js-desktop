@@ -11,7 +11,9 @@
     "predist": "node prepare-app.mjs",
     "dist": "electron-builder --win",
     "predist:dir": "node prepare-app.mjs",
-    "dist:dir": "electron-builder --win --dir"
+    "dist:dir": "electron-builder --win --dir",
+    "prerelease": "node prepare-app.mjs",
+    "release": "electron-builder --win --publish always"
   },
   "devDependencies": {
     "electron": "^33.0.0",
@@ -25,6 +27,14 @@
       "output": "dist",
       "buildResources": "recursos"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "yetto-tools",
+        "repo": "bpmn-js-desktop",
+        "releaseType": "release"
+      }
+    ],
     "files": [
       "main.js",
       "web/**/*"
