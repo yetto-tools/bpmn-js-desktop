@@ -1012,7 +1012,10 @@ const PALETTE_GAP = 20;
  */
 function paletteRoom(palette, containerRect) {
   const toggle = palette.querySelector('.djs-palette-toggle');
-  const actions = document.querySelector('.app-actions');
+
+  // solo la barra de la izquierda estorba a la paleta; la del zoom está en la
+  // esquina contraria
+  const actions = document.querySelector('.app-actions-start');
 
   const top = palette.getBoundingClientRect().top - containerRect.top;
   const reserved = PALETTE_GAP + (toggle ? toggle.offsetHeight : 0);

@@ -241,6 +241,14 @@ body {
   gap: 10px;
 }
 
+/* el zoom vive en la esquina opuesta, donde se espera en un editor de
+   diagramas y lejos de las acciones sobre el archivo */
+
+.app-actions-end {
+  left: auto;
+  right: 16px;
+}
+
 .app-actions-group {
   display: flex;
   gap: 2px;
@@ -688,9 +696,15 @@ body {
 }
 
 /* el logotipo de bpmn.io se muestra fijo abajo a la derecha */
+/* Sube el logotipo por encima del zoom, que ahora ocupa esta esquina.
+
+   Lleva `!important` porque bpmn-js le pone la posición en línea desde
+   JavaScript, y un estilo en línea gana a cualquier regla de la hoja: sin
+   esto el logotipo se quedaba debajo de los botones. */
+
 .bjs-powered-by {
-  bottom: 12px;
-  right: 12px;
+  bottom: 60px !important;
+  right: 16px !important;
 }
 
 /* ARRASTRAR Y SOLTAR */
