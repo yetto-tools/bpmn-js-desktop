@@ -92,6 +92,9 @@ const elements = {
   fileInput: document.getElementById('file-input'),
   undo: document.querySelector('[data-action="undo"]'),
   redo: document.querySelector('[data-action="redo"]'),
+  exportMenu: document.getElementById('export-menu'),
+  exportTrigger: document.querySelector('.app-menu-trigger'),
+  exportList: document.getElementById('export-menu-list'),
   cut: document.getElementById('cut'),
   copy: document.getElementById('copy')
 };
@@ -664,6 +667,7 @@ const actions = {
   },
   'open': () => elements.fileInput.click(),
   'download-bpmn': downloadBpmn,
+  'toggle-export': () => setExportMenuOpen(!isExportMenuOpen()),
   'download-svg': downloadSvg,
   'download-png': downloadPng,
   'download-pdf': openPdfOptions,
@@ -718,7 +722,19 @@ async function runAction(name, ...args) {
 document.addEventListener('click', event => {
   const button = event.target.closest('button[data-action]');
 
+  // cualquier clic que no sea en el desplegable de exportación lo cierra,
+  // incluido el de otro botón de la barra
+  if (!event.target.closest('#export-menu')) {
+    setExportMenuOpen(false);
+  }
+
   if (button) {
+
+    // al elegir un formato, el menú ya ha cumplido su función
+    if (button.getAttribute('role') === 'menuitem') {
+      setExportMenuOpen(false);
+    }
+
     runAction(button.dataset.action);
   }
 });
@@ -901,6 +917,75 @@ window.addEventListener('beforeunload', event => {
     event.returnValue = '';
   }
 });
+
+/* #region menú de exportación */
+
+/** @returns {boolean} */
+function isExportMenuOpen() {
+  return elements.exportTrigger.getAttribute('aria-expanded') === 'true';
+}
+
+/**
+ * Abre o cierra el desplegable de formatos.
+ *
+ * @param {boolean} open
+ * @param {boolean} [focusFirst] llevar el foco a la primera opción
+ */
+function setExportMenuOpen(open, focusFirst = false) {
+  if (!open && !isExportMenuOpen()) {
+    return;
+  }
+
+  elements.exportTrigger.setAttribute('aria-expanded', String(open));
+  elements.exportList.hidden = !open;
+
+  if (open && focusFirst) {
+    const [ first ] = elements.exportList.querySelectorAll('[role="menuitem"]');
+
+    first && first.focus();
+  }
+}
+
+/** Recorre las opciones con las flechas, como cualquier menú del sistema. */
+elements.exportMenu.addEventListener('keydown', event => {
+  const items = [ ...elements.exportList.querySelectorAll('[role="menuitem"]') ];
+
+  if (event.key === 'Escape') {
+    setExportMenuOpen(false);
+    elements.exportTrigger.focus();
+
+    return;
+  }
+
+  if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (!isExportMenuOpen()) {
+    setExportMenuOpen(true, true);
+
+    return;
+  }
+
+  const current = items.indexOf(document.activeElement);
+  const step = event.key === 'ArrowDown' ? 1 : -1;
+
+  // se da la vuelta al llegar a los extremos
+  const next = items[(current + step + items.length) % items.length];
+
+  next && next.focus();
+});
+
+// al salir del menú con el tabulador deja de tener sentido mantenerlo abierto
+elements.exportMenu.addEventListener('focusout', event => {
+  if (!elements.exportMenu.contains(event.relatedTarget)) {
+    setExportMenuOpen(false);
+  }
+});
+
+/* #endregion */
 
 /* #region paleta adaptable */
 
